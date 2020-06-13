@@ -1,6 +1,7 @@
 # README
 
-最後更新時間: 2020-06-11
+最後更新時間: 2020-06-13  
+移到 Github Repository: R_package_learning_note
 
 學習如何操作 R::automap套件。
 
