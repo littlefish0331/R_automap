@@ -1,0 +1,81 @@
+---
+title: "01_note_automap_document"
+author: "Steve, Yu"
+date: "2020/6/12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(dplyr)
+library(data.table)
+library(automap)
+opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+gstat::vgm()
+```
+
+```{r}
+data(meuse)
+coordinates(meuse) = ~x+y
+variogram = autofitVariogram(formula = zinc~1, input_data = meuse)
+plot(variogram)
+```
+
+```{r}
+# Residual variogram 
+# 殘差變異函數
+data(meuse)
+coordinates(meuse) = ~x+y
+variogram = autofitVariogram(formula = zinc ~ soil + ffreq + dist, input_data = meuse)
+plot(variogram)
+```
+
+```{r}
+# Settings additional fitting options
+variogram = autofitVariogram(formula = zinc ~ soil + ffreq + dist,
+                             input_data =  meuse,
+                             miscFitOptions = list(merge.small.bins = FALSE))
+plot(variogram)
+```
+
+```{r}
+# 擬合的比較好
+# Settings the minimum number of pairs per bin quite high
+# to see the effect of merging bins
+variogram = autofitVariogram(formula = zinc ~ soil + ffreq + dist, 
+                             input_data = meuse, 
+                             miscFitOptions = list(min.np.bin = 500))
+plot(variogram)
+```
+
+```{r}
+# ...and disable the merging, note the difference between the two plots
+variogram = autofitVariogram(formula = zinc ~ soil + ffreq + dist, 
+                             input_data = meuse,
+                             miscFitOptions = list(min.np.bin = 500, merge.small.bins = FALSE))
+plot(variogram)
+```
+
+```{r eval = F}
+## Not run:
+# An example of autofitVariogram with anisotropic sample variogram.
+# This is not supported, see details section.
+vm.isotropic = autofitVariogram(log(zinc) ~ dist, meuse)
+vm.anisotropic = autofitVariogram(formula = log(zinc) ~ dist, 
+                                  input_data = meuse, 
+                                  alpha = c(0,45,90,135))
+```
+
+
+
+---
+
+```{r}
+demo(automap)
+```
+
+
+# END
